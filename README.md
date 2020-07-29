@@ -179,6 +179,33 @@ aws s3api put-object-acl --bucket mys3bucket --key keyname --acl bucket-owner-fu
     }
   ]
 }
-
-
+```
+- Enforce Encryption At Rest: Deny any Put actions that do not have a header to encrypt the object using SSE-S3 encryption.
+```
+{
+     "Version": "2012-10-17",
+     "Id": "Example",
+     "Statement": [
+           {
+                "Sid": "Ex1a",
+                "Effect": "Deny",
+                "Principal": "*",
+                "Action": "s3:PutObject",
+                "Resource": "arn:aws:s3:::mys3bucket/*",
+                "Condition": {
+                        "StringNotEquals": { "s3:x-amz-server-side-encryption": "AES256" }
+                }
+           },
+           {
+                "Sid": "Ex1b",
+                "Effect": "Deny",
+                "Principal": "*",
+                "Action": "s3:PutObject",
+                "Resource": "arn:aws:s3:::mys3bucket/*",
+                "Condition": {
+                        "Null": { "s3:x-amz-server-side-encryption": true }
+               }
+           }
+     ]
+ }
 ```
