@@ -92,3 +92,22 @@ Example of CLI command used to give bucket owner full control of created objects
 ```
 aws s3api put-object-acl --bucket destination_awsexamplebucket --key keyname --acl bucket-owner-full-control
 ```
+- Limit S3 bucket creation to a specific region.
+```
+{
+   "Version":"2012-10-17",
+   "Statement":[
+      {
+         "Sid":"Example",
+         "Effect":"Allow",
+         "Action": "s3:CreateBucket",
+         "Resource": "arn:aws:s3:::*",
+         "Condition": {
+             "StringLike": {
+                 "s3:LocationConstraint": "us-east-1"
+             }
+         }
+       }
+    ]
+}
+```
