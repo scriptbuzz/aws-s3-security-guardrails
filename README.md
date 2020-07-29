@@ -1,5 +1,5 @@
 # aws-s3-security
-Controls I use often to secure S3 data by enforcing rules such as IP sources, VPC origins, encryption, MFA, etc.
+Controls I use often to secure S3 data by enforcing rules such as IP sources, VPC origins, encryption, MFA, etc. NOTE: Resource names, resource IDs, and IP addressed in these examples are for illustration purposes and will be different in your account.
 
 - White list IP ranges: Deny API actions on an S3 bucket and its objects unless from specified IP addresses in the Condition block of the policy.
 ```
