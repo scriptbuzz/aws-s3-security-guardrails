@@ -153,3 +153,32 @@ aws s3api put-object-acl --bucket mys3bucket --key keyname --acl bucket-owner-fu
    ]
 }
 ```
+- Enforce Encryption In Transit: Deny access to an S3 bucket if https is not used for API actions
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [ "12345678912"]
+      },
+      "Action": "s3:Get*",
+      "Resource": "arn:aws:s3:::mys3bucket/*"
+    },
+    {
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "*",
+      "Resource": "arn:aws:s3:::mys3bucket/*",
+      "Condition": {
+        "Bool": {
+          "aws:SecureTransport": "false"
+        }
+      }
+    }
+  ]
+}
+
+
+```
