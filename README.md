@@ -109,3 +109,25 @@ aws s3api put-object-acl --bucket mys3bucket --key keyname --acl bucket-owner-fu
     ]
 }
 ```
+- Limit access to an S3 bucket and its content to a VPC endpoint. Note: This will disable console access to the S3 bucket
+```
+{
+   "Version": "2012-10-17",
+   "Id": "Policy1415115909152",
+   "Statement": [
+     {
+       "Sid": "example",
+       "Principal": "*",
+       "Action": "s3:*",
+       "Effect": "Deny",
+       "Resource": ["arn:aws:s3:::mys3bucket",
+                    "arn:aws:s3:::mys3bucket/*"],
+       "Condition": {
+         "StringNotEquals": {
+           "aws:SourceVpce": "vpce-123456"
+         }
+       }
+     }
+   ]
+}
+```
