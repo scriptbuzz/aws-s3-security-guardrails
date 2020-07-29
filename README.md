@@ -8,7 +8,7 @@ Controls to secure S3 data
   "Id": "Example",
   "Statement": [
     {
-      "Sid": "IPWhiteList",
+      "Sid": "Ex1a",
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
@@ -31,7 +31,7 @@ Controls to secure S3 data
   "Version":"2012-10-17",
   "Statement":[
     {
-      "Sid":"AllowIPmix",
+      "Sid":"Example",
       "Effect":"Allow",
       "Principal":"*",
       "Action":"s3:*",
@@ -51,7 +51,7 @@ Controls to secure S3 data
     "Id": "Example",
     "Statement": [
       {
-        "Sid": "Example",
+        "Sid": "Ex1a",
         "Effect": "Deny",
         "Principal": "*",
         "Action": "s3:*",
@@ -70,7 +70,7 @@ Example policy
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "example1",
+      "Sid": "Example",
       "Effect": "Allow",
       "Principal": {
         "AWS": "arn:aws:iam::ExternalAccountID:user/developer01"
@@ -113,10 +113,10 @@ aws s3api put-object-acl --bucket mys3bucket --key keyname --acl bucket-owner-fu
 ```
 {
    "Version": "2012-10-17",
-   "Id": "Policy1415115909152",
+   "Id": "Example",
    "Statement": [
      {
-       "Sid": "example",
+       "Sid": "Ex1a",
        "Principal": "*",
        "Action": "s3:*",
        "Effect": "Deny",
@@ -135,10 +135,10 @@ aws s3api put-object-acl --bucket mys3bucket --key keyname --acl bucket-owner-fu
 ```
 {
    "Version": "2012-10-17",
-   "Id": "example",
+   "Id": "Example",
    "Statement": [
      {
-       "Sid": "example",
+       "Sid": "Ex1a",
        "Principal": "*",
        "Action": "s3:*",
        "Effect": "Deny",
@@ -180,7 +180,7 @@ aws s3api put-object-acl --bucket mys3bucket --key keyname --acl bucket-owner-fu
   ]
 }
 ```
-- Enforce Encryption At Rest: Deny any Put actions that do not have a header to encrypt the object using SSE-S3 encryption.
+- Enforce SSE-S3 Encryption At Rest: Deny any Put actions that do not have a header to encrypt the object using SSE-S3 encryption.
 ```
 {
      "Version": "2012-10-17",
@@ -208,4 +208,37 @@ aws s3api put-object-acl --bucket mys3bucket --key keyname --acl bucket-owner-fu
            }
      ]
  }
+```
+- Enforce SSE-KMS Encryption At Rest: Deny any Put actions that do not have a header to encrypt the object using SSE-KMS encryption.
+```
+{
+       "Version": "2012-10-17",
+       "Id": "Example",
+       "Statement": [
+           {
+                "Sid": "Ex1a",
+                "Effect": "Deny",
+                "Principal": "*",
+                "Action": "s3:PutObject",
+                "Resource": "arn:aws:s3:::mys3bucket/*",
+                "Condition": {
+                    "StringNotEquals": {
+                          "s3:x-amz-server-side-encryption": "aws:kms"
+                             }
+                   }
+           },
+           {
+                "Sid": "Ex1b",
+                "Effect": "Deny",
+                "Principal": "*",
+                "Action": "s3:PutObject",
+                "Resource": "arn:aws:s3::mys3bucket/*",
+                "Condition": {
+                    "Null": {
+                          "s3:x-amz-server-side-encryption": true
+                            }
+                    }
+           }
+    ]
+}
 ```
