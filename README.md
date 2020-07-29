@@ -61,36 +61,34 @@ Controls to secure S3 data
     ]
  }
 ```
-- Bucket owner you must have full control of  objects uploaded to bucket from another account. 
+- Bucket owner must have full control of objects uploaded to S3 bucket from an external AWS account. 
 
 Example policy
+
 ```
 {
-   "Version":"2012-10-17",
-   "Statement":[
-     {
-       "Sid":"Ex1",
-       "Effect":"Allow",
-       "Principal":{"AWS":"123456789012"},
-       "Action":"s3:PutObject",
-       "Resource":"arn:aws:s3:::mys3bucket/*"
-     },
-     {
-       "Sid":"Ex2",
-       "Effect":"Deny",
-       "Principal":{"AWS":"123456789012" },
-       "Action":"s3:PutObject",
-       "Resource":"arn:aws:s3:::mys3bucket/*",
-       "Condition": {
-         "StringNotEquals": {"s3:x-amz-grant-full-control":<BucketOwnerAccountCanonicalUserID>}
-       }
-     }
-   ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "example1",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::ExternalAccountID:user/developer01"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::mys3bucket/*",
+      "Condition": {
+        "StringEquals": {
+          "s3:x-amz-grant-full-control": "id=SourceAaccount-CanonicalUserID"
+        }
+      }
+    }
+  ]
 }
 ```
-Example of CLI command used to give bucket owner full control of created objects:
+Example of CLI command from external account used to give bucket owner in source account full control of created S3 objects:
 ```
-aws s3api put-object-acl --bucket destination_awsexamplebucket --key keyname --acl bucket-owner-full-control
+aws s3api put-object-acl --bucket mys3bucket --key keyname --acl bucket-owner-full-control
 ```
 - Limit S3 bucket creation to a specific region.
 ```
