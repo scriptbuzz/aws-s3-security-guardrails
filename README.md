@@ -61,3 +61,34 @@ Controls to secure S3 data
     ]
  }
 ```
+- Bucket owner you must have full control of  objects uploaded to bucket from another account. 
+
+Example policy
+```
+{
+   "Version":"2012-10-17",
+   "Statement":[
+     {
+       "Sid":"Ex1",
+       "Effect":"Allow",
+       "Principal":{"AWS":"123456789012"},
+       "Action":"s3:PutObject",
+       "Resource":"arn:aws:s3:::mys3bucket/*"
+     },
+     {
+       "Sid":"Ex2",
+       "Effect":"Deny",
+       "Principal":{"AWS":"123456789012" },
+       "Action":"s3:PutObject",
+       "Resource":"arn:aws:s3:::mys3bucket/*",
+       "Condition": {
+         "StringNotEquals": {"s3:x-amz-grant-full-control":<BucketOwnerAccountCanonicalUserID>}
+       }
+     }
+   ]
+}
+```
+Example of CLI command used to give bucket owner full control of created objects:
+```
+aws s3api put-object-acl --bucket destination_awsexamplebucket --key keyname --acl bucket-owner-full-control
+```
